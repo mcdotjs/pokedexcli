@@ -1,17 +1,20 @@
 package main
 
-var config *Config
+import (
+	"github.com/mcdotjs/pokedex/internal/api"
+	"time"
+)
 
-type Config struct {
-	Next     string
-	Previous string
+type config struct {
+	pokeapiClient api.Client
+	Next          *string
+	Previous      *string
 }
 
 func main() {
-	if config == nil {
-		config = &Config{
-			Next:     "https://pokeapi.co/api/v2/location-area",
-		}
+	pokeClient := api.NewClient(5 * time.Second)
+	config := &config{
+		pokeapiClient: pokeClient,
 	}
-	startRepl()
+	startRepl(config)
 }

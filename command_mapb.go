@@ -1,16 +1,25 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
-func mapCommandBack() error {
-	v, e := makeRequest(config.Previous)
+func mapCommandBack(c *config) error {
+	if c.Previous == nil {
+    //NOTE: rf
+		t := "https://pokeapi.co/api/v2/location-area"
+		c.Next = &t
+		return errors.New("you're on the first page")
+	}
+	v, e := c.pokeapiClient.MakeRequest(c.Previous)
 	if e != nil {
 		return e
 	}
-	config.Next = v.Next
-	config.Previous = v.Previous
-	for loc := range v.Results {
-		fmt.Println(v.Results[loc].Name)
+	c.Next = v.Next
+	c.Previous = v.Previous
+	for _, loc := range v.Results {
+		fmt.Println(loc.Name)
 	}
 
 	return nil
