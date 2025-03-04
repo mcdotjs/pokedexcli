@@ -21,11 +21,10 @@ func NewClient(timeout time.Duration) Client {
 
 func (c *Client) MakeRequest(pageURL *string) (LocationAreaResponse, error) {
 	url := baseURL + "/location-area"
-fmt.Println(url)
 	if pageURL != nil {
 		url = *pageURL
 	}
-fmt.Println("2",url)
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		e := fmt.Errorf("Problem with request")
