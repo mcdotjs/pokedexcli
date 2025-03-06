@@ -1,11 +1,8 @@
 package pokecache
 
 import (
-	"fmt"
 	"sync"
 	"time"
-
-	"github.com/charmbracelet/bubbles/key"
 )
 
 type Cache struct {
@@ -22,14 +19,23 @@ func NewCache(interval time.Duration) *Cache {
 	cache := &Cache{
 		value: make(map[string]cacheEntry),
 	}
-	//start feap loop
 	go cache.reapLoop(interval)
 
 	return cache
 }
 
 func (c *Cache) reapLoop(interval time.Duration) {
-
+	ticker := time.NewTicker(interval)
+	for {
+		c.mu.Lock()
+		<-ticker.C
+		for key, entry := range c.value {
+			if time.Now().Sub(entry.createdAt) > interval {
+				delete(c.value, key)
+			}
+		}
+		c.mu.Unlock()
+	}
 }
 
 func (c *Cache) Add(k string, val []byte) {
@@ -44,9 +50,11 @@ func (c *Cache) Add(k string, val []byte) {
 }
 
 func (c *Cache) Get(key string) ([]byte, bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	v, exist := c.value[key]
 	if exist {
-		return v.val, false
+		return v.val, true
 	}
 	return []byte{}, false
 }
