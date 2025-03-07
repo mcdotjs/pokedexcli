@@ -26,9 +26,8 @@ func NewCache(interval time.Duration) *Cache {
 
 func (c *Cache) reapLoop(interval time.Duration) {
 	ticker := time.NewTicker(interval)
-	for {
+	for range ticker.C {
 		c.mu.Lock()
-		<-ticker.C
 		for key, entry := range c.value {
 			if time.Now().Sub(entry.createdAt) > interval {
 				delete(c.value, key)
