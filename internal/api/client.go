@@ -24,16 +24,16 @@ func NewClient(timeout time.Duration) Client {
 	}
 }
 
-func (c *Client) MakeRequest(pageURL *string) (LocationAreaResponse, error) {
+func (c *Client) ListLocations(pageURL *string) (LocationAreaResponse, error) {
 	url := baseURL + "/location-area"
-
+	var result LocationAreaResponse
 	if pageURL != nil {
+
 		url = *pageURL
 	}
 
 	val, exist := c.cache.Get(url)
 	if exist {
-		var result LocationAreaResponse
 		if err := json.Unmarshal(val, &result); err != nil {
 			return LocationAreaResponse{}, err
 		}
@@ -58,15 +58,41 @@ func (c *Client) MakeRequest(pageURL *string) (LocationAreaResponse, error) {
 	}
 	c.cache.Add(url, data)
 
-	var result LocationAreaResponse
-	// decoder := json.NewDecoder(res.Body)
-	// err = decoder.Decode(&result)
-	// if err != nil {
-	// 	e := fmt.Errorf("Problem with decode")
-	// 	return LocationAreaResponse{}, e
-	//}
 	if err := json.Unmarshal(data, &result); err != nil {
 		return LocationAreaResponse{}, fmt.Errorf("problem with decode: %w", err)
 	}
 	return result, nil
+}
+
+func (c *Client) ListPokemonOccurence(url string) (PokemonEncountersResponse, error) {
+	var result PokemonEncountersResponse
+	val, exist := c.cache.Get(url)
+	if exist {
+		if err := json.Unmarshal(val, &result); err != nil {
+			return PokemonEncountersResponse{}, err
+		}
+		return result, nil
+	}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return PokemonEncountersResponse{}, fmt.Errorf("Problem with request")
+	}
+
+	res, err := c.httpClient.Do(req)
+	if err != nil {
+		return PokemonEncountersResponse{}, fmt.Errorf("Problem with Client")
+	}
+	defer res.Body.Close()
+
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		return PokemonEncountersResponse{}, err
+	}
+	c.cache.Add(url, data)
+
+	if err := json.Unmarshal(data, &result); err != nil {
+		return PokemonEncountersResponse{}, err
+	}
+	return result, nil
+
 }
