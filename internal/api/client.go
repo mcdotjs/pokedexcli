@@ -96,3 +96,29 @@ func (c *Client) ListPokemonOccurence(url string) (PokemonEncountersResponse, er
 	return result, nil
 
 }
+
+func (c *Client) CatchPokemon(url string) (Pokemon, error) {
+	var result Pokemon
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return Pokemon{}, err
+	}
+
+	res, err := c.httpClient.Do(req)
+	if err != nil {
+		return Pokemon{}, err
+	}
+	defer res.Body.Close()
+
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		return Pokemon{}, err
+	}
+
+	if err := json.Unmarshal(data, &result); err != nil {
+		return Pokemon{}, err
+	}
+
+	return result, nil
+
+}
