@@ -63,28 +63,33 @@ func getCommands() map[string]cliCommand {
 		},
 		"map": {
 			name:        "map",
-			description: "map locations",
+			description: "Map locations",
 			callback:    mapCommandForward,
 		},
 		"mapb": {
 			name:        "mapb",
-			description: "map locationsb",
+			description: "Map locations backward",
 			callback:    mapCommandBack,
 		},
 		"explore": {
 			name:        "explore",
-			description: "explore loacations",
+			description: "Explore loacations",
 			callback:    exploreCommand,
 		},
 		"catch": {
 			name:        "catch",
-			description: "catch pokemon",
+			description: "Catch pokemon",
 			callback:    commandCatch,
 		},
 		"inspect": {
 			name:        "inspect",
-			description: "inspect pokemon",
+			description: "Inspect pokemon",
 			callback:    inspectCommand,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "Show my pokedex",
+			callback:    pokedexCommand,
 		},
 	}
 }

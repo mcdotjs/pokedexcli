@@ -18,6 +18,7 @@ func commandCatch(c *config, args []string) error {
 	if num == 2 {
 		(*c.Pokedex)[v.Name] = v
 		fmt.Println(v.Name + " was caught!")
+		fmt.Println("You may now inspect it with the inspect command.")
 	}
 	return nil
 }
