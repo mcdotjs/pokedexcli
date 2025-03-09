@@ -19,8 +19,5 @@ func commandCatch(c *config, args []string) error {
 		(*c.Pokedex)[v.Name] = v
 		fmt.Println(v.Name + " was caught!")
 	}
-	for _, v := range *c.Pokedex {
-		fmt.Println("- " +v.Name)
-	}
 	return nil
 }
