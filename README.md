@@ -1,7 +1,8 @@
 ## Pokedex
 
-- simple REPL on the command line in Go
-- learn how to use JSON, make network requests, and implement caching in GO
+Simple REPL on the command line in Go
+
+I was learning how to use JSON, make network requests, and implement caching in GO
 
 #### how to run?
 
